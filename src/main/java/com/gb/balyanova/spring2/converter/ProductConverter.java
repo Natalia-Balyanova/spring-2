@@ -15,7 +15,4 @@ public class ProductConverter {
     public ProductDto entityToDto(Product product) {
         return new ProductDto(product.getId(), product.getTitle(), product.getPrice());
     }
-    public User jwtRequestToUser(JwtRequest jwtRequest) {
-        return new User(jwtRequest.getUsername(), jwtRequest.getPassword());
-    }
 }

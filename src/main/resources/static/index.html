@@ -15,27 +15,6 @@
 <body>
 
 <div class="container" ng-controller="indexController">
-<!--    форма регистрации-->
-    <form ng-submit="registration()">
-        <div class="row mb-4" style="margin-top: 30px;">
-            <div class="col">
-                <div class="form-outline">
-                    <input type="text"  ng-model="user.username" class="form-control" />
-                    <label class="form-label" >Login</label>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-outline mb-4">
-                    <input type="password"  ng-model="user.password" class="form-control" />
-                    <label class="form-label" >Password</label>
-                </div>
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-primary btn-block mb-4">Sign Up</button>
-            </div>
-        </div>
-    </form>
-
 <!--    форма авторизации-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -89,7 +68,7 @@
                     <td>ID</td>
                     <td>Title</td>
                     <td>Price</td>
-                    <td>Add to Change Form</td>
+<!--                    <td>Add to Change Form</td>-->
                     <td>Add to Cart</td>
                     <td>Delete</td>
                 </tr>
@@ -98,9 +77,9 @@
                     <td>{{p.id}}</td>
                     <td>{{p.title}}</td>
                     <td>{{p.price}}</td>
-                    <td>
-                        <button class="btn btn-primary" ng-click="prepareProductForUpdate(p.id)">Change</button>
-                    </td>
+<!--                    <td>-->
+<!--                        <button class="btn btn-primary" ng-click="prepareProductForUpdate(p.id)">Change</button>-->
+<!--                    </td>-->
                     <td>
                         <button class="btn btn-primary" ng-click="addToCart(p.id)">Add to Cart</button>
                     </td>
@@ -115,48 +94,65 @@
 
     <div>
         <h3>Products in Cart</h3>
-        <table class="table">
+        <table class="table table-hover" >
             <thead>
             <tr>
-                <td>ID</td>
                 <td>Title</td>
                 <td>Price</td>
+                <td>Amount</td>
                 <td>Delete from Cart</td>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat='p in CartPage'>
-                <td>{{p.id}}</td>
-                <td>{{p.title}}</td>
-                <td>{{p.price}}</td>
+            <tr ng-repeat='item in Cart.items'>
+                <td>{{item.productTitle}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.pricePerProduct + ' x ' + item.quantity + ' = ' + item.price}}</td>
                 <td>
-                    <button class="btn btn-danger" ng-click="deleteProductFromCart(p.id)">Delete</button>
+                    <button class="btn btn-danger" ng-click="removeItem(item.productId)">Delete</button>
                 </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Total</td>
+                <td>{{Cart.totalPrice}}</td>
             </tr>
             </tbody>
         </table>
+
+        <p>
+            <button class="btn btn-secondary" ng-click="clearCart()">Clear cart</button>
+        </p>
+
+        <form novalidate ng-submit="createOrder()">
+            <input class="form-control" type="text" placeholder="Phone" ng-model="orderDetail.phone">
+            <p></p>
+            <input class="form-control" type="text" placeholder="Address" ng-model="orderDetail.address">
+            <p></p>
+            <button type="submit" class="btn btn-primary">Create order</button>
+        </form>
     </div>
 
-    <p></p>
-    <h3>Add product JSON</h3>
-    <form novalidate ng-submit="createProductJson()">
-        <input class="form-control" type="text" placeholder="Title" ng-model="newProductJson.title">
-        <p></p>
-        <input class="form-control" type="number" placeholder="Price" ng-model="newProductJson.price">
-        <p></p>
-        <button type="submit" class="btn btn-primary">Save JSON product</button>
-    </form>
+<!--    <p></p>-->
+<!--    <h3>Add product JSON</h3>-->
+<!--    <form novalidate ng-submit="createProductJson()">-->
+<!--        <input class="form-control" type="text" placeholder="Title" ng-model="newProductJson.title">-->
+<!--        <p></p>-->
+<!--        <input class="form-control" type="number" placeholder="Price" ng-model="newProductJson.price">-->
+<!--        <p></p>-->
+<!--        <button type="submit" class="btn btn-primary">Save JSON product</button>-->
+<!--    </form>-->
 
-    <h3>Update product</h3>
-    <form novalidate ng-submit="updateProduct()">
-        <input class="form-control" type="number" hidden placeholder="Id" ng-model="updated_product.id">
-        <p></p>
-        <input class="form-control" type="text" placeholder="Title" ng-model="updated_product.title">
-        <p></p>
-        <input class="form-control" type="number" placeholder="Price" ng-model="updated_product.price">
-        <p></p>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
+<!--    <h3>Update product</h3>-->
+<!--    <form novalidate ng-submit="updateProduct()">-->
+<!--        <input class="form-control" type="number" hidden placeholder="Id" ng-model="updated_product.id">-->
+<!--        <p></p>-->
+<!--        <input class="form-control" type="text" placeholder="Title" ng-model="updated_product.title">-->
+<!--        <p></p>-->
+<!--        <input class="form-control" type="number" placeholder="Price" ng-model="updated_product.price">-->
+<!--        <p></p>-->
+<!--        <button type="submit" class="btn btn-primary">Update</button>-->
+<!--    </form>-->
 
     <br>
         <span class="pages">

@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -39,32 +38,8 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
-//    @Override
-//    @Transactional
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
-//        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapPermissionsToAuthorities(user.getAuthorities()));
-//    }
-
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         log.info("Role: " + roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
-
-    private Collection <? extends GrantedAuthority> mapPermissionsToAuthorities (Collection <Authority> authorities){
-        log.info("Authority: " + authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList()));
-        return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList());
-    }
-    public UserDetails saveUser(User user) throws UserIsAlreadyExistsException {
-        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if(userFromDB.isPresent()) {
-            throw new UserIsAlreadyExistsException(String.format("User '%s' is already exists", user.getUsername()));
-        } else {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            user.setRoles(Collections.singleton(new Role()));
-            userRepository.save(user);
-        }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 }
