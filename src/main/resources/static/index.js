@@ -90,6 +90,13 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
                         });
          }
 
+         $scope.loadOrders = function (){
+             $http.get('http://localhost:8189/app/api/v1/orders')
+                        .then(function (response) {
+                             $scope.MyOrders = response.data;
+                        });
+         }
+
          $scope.clearCart = function () {
             $http.delete('http://localhost:8189/app/api/v1/carts/clear')
                                   .then(function (response) {
@@ -117,12 +124,13 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
              $http ({
                  url: 'http://localhost:8189/app/api/v1/orders',
                  method: 'POST',
-                 data: $scope.orderDetail
+                 data: $scope.orderDetails
              }).then(function (response) {
                  console.log(response.data)
                  alert("Order completed");
+                 $scope.loadOrders();
                  $scope.loadCart();
-                 $scope.orderDetail = null;
+                 $scope.orderDetails = null;
              });
      }
 //
@@ -151,4 +159,5 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 //     }
         $scope.loadProducts();
         $scope.loadCart();
+        $scope.loadOrders();
 });

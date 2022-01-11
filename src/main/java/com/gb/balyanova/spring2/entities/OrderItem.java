@@ -4,8 +4,11 @@ import com.gb.balyanova.spring2.dto.OrderItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order_items")
@@ -18,31 +21,35 @@ public class OrderItem {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "price_per_product")
-    private int pricePerProduct;
+    private Integer pricePerProduct;
 
     @Column(name = "price")
-    private int price;
-
-//    @JoinColumn(name = "user_id")
-//    private User userId;
+    private Integer price;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
-    public OrderItem(OrderItemDto orderItemDto, Order order) {
-        this.productId = orderItemDto.getProductId();
-        this.quantity = orderItemDto.getQuantity();
-        this.pricePerProduct = orderItemDto.getPricePerProduct();
-        this.price = orderItemDto.getPrice();
-        this.order = order;
-//        this.userId = userId;
-    }
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+//    public OrderItem(OrderItemDto orderItemDto, Order order) {
+//        this.quantity = orderItemDto.getQuantity();
+//        this.pricePerProduct = orderItemDto.getPricePerProduct();
+//        this.price = orderItemDto.getPrice();
+//        this.order = order;
+//    }
 }
