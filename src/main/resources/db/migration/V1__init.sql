@@ -1,4 +1,4 @@
-create table if not exists products (id bigserial primary key, title varchar(255), price int);
+create table products (id bigserial primary key, title varchar(255), price int);
 
 insert into products (title, price)
 values
@@ -45,23 +45,6 @@ CREATE TABLE users_roles (
   foreign key (role_id) references roles (id)
 );
 
-CREATE TABLE authorities (
-  id   serial,
-  name varchar(50) not null,
-  primary key (id)
-);
-
-CREATE TABLE users_authorities (
-    user_id             bigint not null,
-    authority_id        int not null,
-    primary key (user_id, authority_id),
-    foreign key (user_id) references users (id),
-    foreign key (authority_id) references authorities (id)
-);
-
-insert into authorities (name)
-values ('ADD_PRODUCT'), ('DELETE_ORDER'), ('ADMINISTRATE'), ('DELETE_USER');
-
 insert into roles (name)
 values
 ('ROLE_USER'), ('ROLE_ADMIN'), ('ROLE_SUPERADMIN');
@@ -78,5 +61,22 @@ insert into users_roles (user_id, role_id)
 values
 (1, 1), (2, 1), (3, 2), (4, 3);
 
-insert into users_authorities (user_id, authority_id)
-values (1, 1), (2, 1), (3, 2), (4, 2), (3, 3), (4, 3), (3, 4), (4, 4);
+
+create table orders (
+    id          bigserial primary key,
+    --    user_id         bigint not null references users (id),
+    total_price int not null,
+    address     varchar(255),
+    phone       varchar(255)
+);
+
+
+create table order_items (
+    id                  bigserial primary key,
+    --    user_id                 bigint not null references users (id),
+    product_id          bigint not null,
+    order_id            bigint references orders (id),
+    quantity            int not null,
+    price_per_product   int not null,
+    price               int not null
+);

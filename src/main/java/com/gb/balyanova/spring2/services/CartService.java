@@ -1,48 +1,43 @@
 package com.gb.balyanova.spring2.services;
 
-import com.gb.balyanova.spring2.dto.ProductDto;
+import com.gb.balyanova.spring2.dto.Cart;
 import com.gb.balyanova.spring2.entities.Product;
-import com.gb.balyanova.spring2.repositories.ProductRepository;
+import com.gb.balyanova.spring2.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.annotation.PostConstruct;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
-    private final ProductRepository productRepository;
-    private List <ProductDto> cart = new ArrayList<>();
-    //попытка сделать корзину хэшмапой не увенчалось успехом
-//    private Map<ProductDto, Integer> cart = new LinkedHashMap<>();
+    private final ProductService productService;
+    private Cart cart;
 
-    public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+    @PostConstruct
+    public void init() {
+        cart = new Cart();
     }
 
-    public void addProductInCart (Long id){
-        cart.add(new ProductDto(findById(id).get()));
-    }
-
-    public List<ProductDto> cardInfo (){
+    public Cart getCurrentCart() {
         return cart;
     }
 
-    public void deleteByIdFromCartId(Long id) {
-        cart.remove(new ProductDto(findById(id).get()));
+    public void addProductByIdToCart(Long productId) {
+        if (!getCurrentCart().addProduct(productId)) {
+            Product product = productService.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Невозможно добавить продукт в корзину. Продукт не найдет, id: " + productId));
+            getCurrentCart().addProduct(product);
+        }
     }
-//    public void addProductInCart (Long id, Integer count){
-//        cart.put(new ProductDto(findById(id).get()), count);
-//    }
-//
-//    public Map<ProductDto, Integer> cardInfo (){
-//        return cart;
-//    }
-//    @Transactional
-//    public void changeAmount(Long productId, Integer amount) {
-//        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Unable to change product`s amount, id: " + productId));
-//        product.setAmount(product.getAmount() + amount);
-//    }
+
+    public void clear() {
+        getCurrentCart().clear();
+    }
+
+    public void removeItem(Long productId) {
+        getCurrentCart().removeProduct(productId);
+    }
+
+    public void decrease(Long productId) { getCurrentCart().decreaseProduct(productId);}
 }
+
