@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/carts")
+@RequestMapping("/api/v1/cart")
 public class CartController {
     private final CartService cartService;
 
@@ -27,6 +27,11 @@ public class CartController {
     @GetMapping("/remove/{id}")
     public void removeItem (@PathVariable Long id){
         cartService.removeItem(id);
+    }
+
+    @GetMapping("/decrement/{id}")
+    public void decrementItem (@PathVariable Long id){
+        cartService.decrease(id);
     }
 
     @DeleteMapping("/clear")
