@@ -1,6 +1,7 @@
 <div>
     <p></p>
     <h3>Products in Cart</h3>
+    <table class="table table-hover">
     <span ng-show="cart.items.length==0"> Корзина пуста </span>
     <table class="table" ng-show="cart.items.length > 0">
         <thead>
@@ -32,9 +33,13 @@
         </tbody>
     </table>
 
+    <p>
+        <button class="btn btn-secondary" ng-show="isUserLoggedIn() && cart.items.length > 0" ng-click="clearCart()">Clear Cart</button>
+    </p>
+
     <p></p>
     <h3 ng-show="isUserLoggedIn() && cart.items.length > 0">Order details</h3>
-    <form novalidate ng-show="isUserLoggedIn() && cart.items.length > 0" >
+    <form ng-show="isUserLoggedIn() && cart.items.length > 0">
         <input class="form-control" type="text" placeholder="Phone" ng-model="orderDetails.phone">
         <p></p>
         <input class="form-control" type="text" placeholder="Address" ng-model="orderDetails.address">

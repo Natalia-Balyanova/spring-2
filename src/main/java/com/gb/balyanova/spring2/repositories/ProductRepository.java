@@ -1,6 +1,7 @@
 package com.gb.balyanova.spring2.repositories;
 
 
+//import com.gb.balyanova.spring2.entities.Category;
 import com.gb.balyanova.spring2.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -26,7 +27,6 @@ public interface ProductRepository extends JpaRepository <Product, Long>, JpaSpe
     @Modifying
     @Query("update Product p set p.title = :title where p.id = :id ")
     void updateProduct(Long id, String title);
-
 //    @Query("select p from Product p where [.title = ?1") //поиск по первому аргументу
 //    Integer hqlGetPriceByTitle(String title);
 //

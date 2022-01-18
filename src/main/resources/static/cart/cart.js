@@ -3,7 +3,7 @@ angular.module('market-front').controller('cartController', function ($scope, $h
 
     $scope.loadCart = function () {
         $http({
-            url: contextPath + 'api/v1/cart',
+            url: contextPath + 'api/v1/cart/' + $localStorage.springWebGuestCartId,
             method: 'GET'
         }).then(function (response) {
             $scope.cart = response.data;
@@ -16,7 +16,7 @@ angular.module('market-front').controller('cartController', function ($scope, $h
 
     $scope.removeItem = function (productId) {
         $http ({
-            url: contextPath + 'api/v1/cart/remove/' + productId,
+            url: contextPath + 'api/v1/cart/' + $localStorage.springWebGuestCartId + '/remove/' + productId,
             method: 'GET'
         }).then(function (response) {
             $scope.loadCart();
@@ -25,7 +25,7 @@ angular.module('market-front').controller('cartController', function ($scope, $h
 
     $scope.incrementItem = function (productId) {
         $http ({
-            url: contextPath + 'api/v1/cart/add/' + productId,
+            url: contextPath + 'api/v1/cart/' +  $localStorage.springWebGuestCartId + '/add/' + productId,
             method: 'GET'
         }).then(function (response) {
                 $scope.loadCart();
@@ -34,11 +34,18 @@ angular.module('market-front').controller('cartController', function ($scope, $h
 
     $scope.decrementItem = function (productId) {
         $http ({
-            url: contextPath + 'api/v1/cart/decrement/' + productId,
+            url: contextPath + 'api/v1/cart/' + $localStorage.springWebGuestCartId  + '/decrement/' + productId,
             method: 'GET'
         }).then(function (response) {
             $scope.loadCart();
         });
+    }
+
+    $scope.clearCart = function () {
+         $http.get(contextPath + 'api/v1/cart/' + $localStorage.springWebGuestCartId + '/clear')
+         .then(function (response) {
+            $scope.loadCart();
+         });
     }
 
     $scope.checkOut = function () {

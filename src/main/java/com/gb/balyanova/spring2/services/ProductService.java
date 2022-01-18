@@ -1,6 +1,7 @@
 package com.gb.balyanova.spring2.services;
 
 import com.gb.balyanova.spring2.dto.ProductDto;
+//import com.gb.balyanova.spring2.entities.Category;
 import com.gb.balyanova.spring2.entities.Product;
 import com.gb.balyanova.spring2.exceptions.ResourceNotFoundException;
 import com.gb.balyanova.spring2.repositories.ProductRepository;
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public Page<Product> findAll(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
+    public Page<Product> findAll(Integer minPrice, Integer maxPrice, String partTitle, Integer page, String categoryPart) {
         Specification<Product> spec = Specification.where(null);
         //select p from Product p where true
         if (minPrice != null){
@@ -32,6 +33,9 @@ public class ProductService {
         }
         if (partTitle != null){
             spec = spec.and(ProductSpecification.titleLike(partTitle));
+        }
+        if (categoryPart != null){
+            spec = spec.and(ProductSpecification.categoryEqual(categoryPart));
         }
         return productRepository.findAll(spec, PageRequest.of(page - 1, 5)); //+sortBy
     }

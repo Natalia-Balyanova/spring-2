@@ -2,6 +2,7 @@ package com.gb.balyanova.spring2.controllers;
 
 import com.gb.balyanova.spring2.converter.ProductConverter;
 import com.gb.balyanova.spring2.dto.ProductDto;
+//import com.gb.balyanova.spring2.entities.Category;
 import com.gb.balyanova.spring2.entities.Product;
 import com.gb.balyanova.spring2.exceptions.ResourceNotFoundException;
 import com.gb.balyanova.spring2.services.ProductService;
@@ -21,6 +22,7 @@ public class ProductController {
     @GetMapping
     public Page<ProductDto> getAllProducts(
             @RequestParam(name = "p", defaultValue = "1") Integer page,
+            @RequestParam(name = "category_part", required = false) String categoryPart,
             @RequestParam(name = "min_price", required = false) Integer minPrice,
             @RequestParam(name = "max_price", required = false) Integer maxPrice,
             @RequestParam(name = "title_part", required = false) String titlePart
@@ -28,9 +30,12 @@ public class ProductController {
         if(page < 1) {
             page = 1;
         }
-        return productService.findAll(minPrice, maxPrice, titlePart, page).map(
+        return productService.findAll(minPrice, maxPrice, titlePart, page, categoryPart).map(
                 p -> productConverter.entityToDto(p)
         );
+//        return productService.findAll(minPrice, maxPrice, titlePart, page).map(
+//                p -> productConverter.entityToDto(p)
+//        );
     }
 
     @PostMapping

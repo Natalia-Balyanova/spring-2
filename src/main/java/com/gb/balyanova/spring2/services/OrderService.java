@@ -22,11 +22,12 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
-    private final ProductService productService;
+    private final ProductService productsService;
 
     @Transactional
     public void createOrder(User user, OrderDetailsDto orderDetailsDto) {
-        Cart currentCart = cartService.getCurrentCart();
+        String cartKey = cartService.getCartUuidFromSuffix(user.getUsername());
+        Cart currentCart = cartService.getCurrentCart(cartKey);
         Order order = new Order();
         order.setAddress(orderDetailsDto.getAddress());
         order.setPhone(order.getPhone());
@@ -40,12 +41,12 @@ public class OrderService {
                     item.setQuantity(orderItemDto.getQuantity());
                     item.setPricePerProduct(orderItemDto.getPricePerProduct());
                     item.setPrice(orderItemDto.getPrice());
-                    item.setProduct(productService.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
+                    item.setProduct(productsService.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
                     return item;
                 }).collect(Collectors.toList());
         order.setItems(items);
         orderRepository.save(order);
-        currentCart.clear();
+        cartService.clearCart(cartKey);
     }
 
     public List<Order> findOrdersByUsername(String username) {
