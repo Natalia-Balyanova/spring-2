@@ -17,6 +17,9 @@ public class ProductValidator {
         if(productDto.getTitle().isBlank()) {
             errors.add("product's title cannot be empty or contain space");
         }
+        if(productDto.getCategoryTitle().isBlank()) {
+            errors.add("category's title cannot be empty or contain space");
+        }
         if(!errors.isEmpty()){
             throw new ValidationException(errors);
         }
