@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,6 +28,14 @@ public interface ProductRepository extends JpaRepository <Product, Long>, JpaSpe
     @Modifying
     @Query("update Product p set p.title = :title where p.id = :id ")
     void updateProduct(Long id, String title);
+
+    @Query("select p from Product p where p.id = ?1")
+    Optional<Product> findByIdQuery(Long id);
+
+//    @Query("select p from Product p where p.id = :id")
+//    Optional<Product> findByIdQuery(@Param ("id") Long id);
+
+
 //    @Query("select p from Product p where [.title = ?1") //поиск по первому аргументу
 //    Integer hqlGetPriceByTitle(String title);
 //
